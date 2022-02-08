@@ -1,0 +1,15 @@
+use 'cbsr-eis-connector.jar' as environment 
+	with server='127.0.0.1',
+		flowkey='server.json',
+		flowagent='test-vfqe',
+		flowlang='en'.
+		
+define dialogmngr as agent {
+	use dialog_init as init.
+	use dialog_update as event.
+	use dialog_generation as main.
+}
+
+launchpolicy{
+	when * launch dialogmngr.
+}

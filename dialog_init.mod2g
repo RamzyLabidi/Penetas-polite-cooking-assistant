@@ -1,0 +1,45 @@
+use dialogue as knowledge.
+use patterns as knowledge.
+use cooking as knowledge.
+use html as knowledge. % knowledge needed for creating window for displaying items (webpage)
+
+use dialogflow as actionspec.
+
+module dialog_init {
+
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%%% Render a page with a start button on any connected browser.		%%%
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+	if bel(initialPage("Time for some delicious food", "Let's make some good food", Html)) % NB: ad hoc layout used here!!! 
+		then renderPage(Html).
+
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%%% Initialize dialogue parameters.									%%%
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	if true then
+		% Agenda (list of patterns)	conversation, a5recipeName,a5recipeName, a50ingredientsCheck, a50utensilsCheck,
+		insert(agenda([greeting, conversation ,a5recipeName, a50recipeName,servingRequest, a50ingredientsCheck, a50utensilsCheck, a30recipe])) +
+		%insert(agenda([a50recipeName, servingRequest, a50ingredientsCheck, a30recipe])) +
+		% Session history (initialized to a list of one empty sequence).
+		insert(session([ [] ])) +
+		% Memory (should be initially empty but to get our given agent started it is not).
+		%insert(memory([recipe = 'Choose one of the pasta dishes'])) +
+		insert(memory([])) +
+		% Initialize missingSlots/1. See dialogue.pl for more info.
+		insert(missingSlots([])) +
+		% Initialize stepCounter/1 and totalSteps/1. See dialogue.pl for more info.
+		insert(stepCounter(-1), totalSteps(0)) +
+		insert(agentName('Penetas')) +
+		insert(lastTopicCheck)  +
+		% Waiting for user to click on START button.
+		insert(waitingForStartButton).
+
+	% Copy agenda to be able to reinitialize (restart) agenda.
+	if bel(agenda(Agenda)) then insert(initialAgenda(Agenda)).
+	
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%%% Initialize behavioural parameters (to finetune agent behavior)	%%%
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	% Add here your bot name using the agentName/1 predicate
+	
+}
